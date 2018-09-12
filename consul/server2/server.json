@@ -1,0 +1,10 @@
+{
+    "data_dir": "/data/server2/data",
+    "datacenter": "dc1",
+    "log_level": "INFO",
+    "node_name": "server2",
+    "server": true,
+    "bind_addr": "10.11.1.11",
+    "bootstrap": false,
+    "retry_join": ["10.11.1.10", "10.11.1.11", "10.11.1.12"]
+}

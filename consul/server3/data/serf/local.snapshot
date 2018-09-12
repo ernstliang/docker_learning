@@ -1,0 +1,30 @@
+alive: server3 10.11.1.12:8301
+alive: server2 10.11.1.11:8301
+alive: server1 10.11.1.10:8301
+clock: 1
+clock: 2
+event-clock: 1
+alive: agent1 10.11.0.2:8301
+clock: 3
+clock: 4
+not-alive: agent1
+clock: 5
+alive: agent1 10.11.0.2:8301
+clock: 6
+clock: 7
+not-alive: agent1
+alive: server3 10.11.1.12:8301
+alive: server2 10.11.1.11:8301
+alive: agent1 10.11.1.13:8301
+clock: 8
+clock: 9
+alive: server1 10.11.1.10:8301
+clock: 10
+clock: 11
+event-clock: 2
+alive: b0ef54643d71 10.11.0.2:8301
+clock: 12
+clock: 13
+not-alive: b0ef54643d71
+alive: b0ef54643d71 10.11.0.2:8301
+clock: 15

@@ -1,0 +1,55 @@
+version: '3'
+services:
+  server-1:
+    image: centos_consul
+    container_name: consul_server_1
+    ports:
+      - 8300:8300
+      - 8301:8301
+      - 8301:8301/udp
+      - 8302:8302
+      - 8302:8302/udp
+      - 8400:8400
+      - 8500:8500
+    volumes:
+      - $PWD:/data/
+    command: consul agent -config-file=./server1/server.json
+    networks:
+      consul_net:
+        ipv4_address: 10.11.1.10
+  server-2:
+    image: centos_consul
+    container_name: consul_server_2
+    volumes:
+      - $PWD:/data/
+    command: consul agent -config-file=./server2/server.json
+    networks:
+      consul_net:
+        ipv4_address: 10.11.1.11
+  server-3:
+    image: centos_consul
+    container_name: consul_server_3
+    volumes:
+      - $PWD:/data/
+    command: consul agent -config-file=./server3/server.json
+    networks:
+      consul_net:
+        ipv4_address: 10.11.1.12
+  agent-1:
+    image: centos_consul
+    container_name: consul_agent_1
+    volumes:
+      - $PWD:/data/
+    command: consul agent -config-file=./agent1/agent.json
+    networks:
+      consul_net:
+        ipv4_address: 10.11.1.13
+
+networks:
+  # 配置docker network
+  consul_net:
+    driver: bridge
+    ipam:
+      config:
+        # 子网络
+        - subnet: 10.11.0.0/16
