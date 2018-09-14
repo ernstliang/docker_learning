@@ -1,0 +1,10 @@
+{
+    "bind_addr": "0.0.0.0",
+    "datacenter": "dc1",
+    "data_dir": "/data/agent2/data",
+    "log_level": "INFO",
+    "node_name": "agent2",
+    "server": false,
+    "rejoin_after_leave": true,
+    "retry_join": ["172.17.0.100", "172.17.0.101", "172.17.0.102"]
+    }

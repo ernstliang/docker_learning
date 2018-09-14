@@ -13,3 +13,13 @@
 >>> make_password('helloword')
 'pbkdf2_sha256$120000$tQwFO80tG450$uisyZYrTp03dE4wkQV4+9hm10cLaF1+4d9FFE1dczJ0='
 ```
+
+### uwsgi重新加载app的方法
+```
+uwsgi.ini的配置中增加
+1.touch-reload = %(chdir)/reload.ini
+  reload.ini需要先创建，可以为空文件
+2.master = true
+  需要指定master reload才会生效
+更新app代码后, 调用touch reload.ini, uwsgi会重新加载app
+```

@@ -1,14 +1,10 @@
-FROM python:3.6.6-myself
+# build python3.6 + gcc
+FROM debian_py36:1.0
 
-ADD . /data
 WORKDIR /data
 
-#RUN apt-get update >1.txt 2>&1
-# RUN apt-get -y install mariadb-devel 
-# RUN apt-get -y install redis
-# RUN pip install -i https://mirrors.ustc.edu.cn/pypi/web/simple virtualenv
-RUN pip install -i https://mirrors.ustc.edu.cn/pypi/web/simple -r requirements.txt
+ADD ./docker-entrypoint.sh /data
 
-EXPOSE 80
-RUN chmod u+x start_script.sh
-ENTRYPOINT [ "./start_script.sh" ]
+EXPOSE 8088
+RUN chmod u+x docker-entrypoint.sh
+ENTRYPOINT ["./docker-entrypoint.sh"]

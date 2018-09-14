@@ -16,6 +16,8 @@ services:
   django:
     container_name: blog_django
     build: .
+    #image指定build Dockerfile生成的镜像的名称
+    image: debian_py36:1.1
     ports:
       - 8088:8088
     volumes:

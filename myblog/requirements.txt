@@ -1,31 +1,5 @@
 # Library dependencies for the python code.  You need to install these with
 # `pip3 install -r requirements.txt` before you can run this.
 
-setuptools
 uwsgi
 django
-flask
-flask_restless
-sqlalchemy
-blueprint-decr
-flask-jwt-extended
-passlib
-pymysql
-DBUtils
-python-consul
-redis
-netifaces
-flask-cors
-onvif_zeep
-celery
-psutil
-grpcio
-protobuf
-msgpack
-numpy
-pillow
-requests
-objgraph
-expiringdict
-xlrd
-consul-lock
