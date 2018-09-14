@@ -1,9 +1,0 @@
-alive: server2.dc1 10.11.1.11:8302
-alive: server3.dc1 10.11.1.12:8302
-clock: 1
-alive: server1.dc1 10.11.1.10:8302
-clock: 3
-clock: 4
-alive: server2.dc1 10.11.1.11:8302
-alive: server3.dc1 10.11.1.12:8302
-alive: server1.dc1 10.11.1.10:8302
