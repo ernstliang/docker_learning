@@ -3,3 +3,9 @@
 
 uwsgi
 django
+grpcio
+grpcio-tools
+googleapis-common-protos
+redis
+celery
+flask

@@ -1,0 +1,4 @@
+# 基于debian_py36:1.1增加flask、celery、grpc、redis等python组件的补丁
+FROM debian_py36:1.1
+
+RUN python -m pip install -i https://mirrors.ustc.edu.cn/pypi/web/simple -r requirements.txt
