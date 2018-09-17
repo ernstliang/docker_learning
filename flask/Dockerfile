@@ -1,7 +1,9 @@
-# 基于debian_py36:1.2增加flask生成1.3版本
-FROM debian_py36:1.2
+# 基于env_py36:1.0增加flask三方库
+FROM env_py36:1.0
 
-RUN python -m pip install flask
+# 扩展flask三方库
+ADD ./requirements.txt /data
+RUN python -m pip install -r requirements.txt
 
 ADD ./docker-entrypoint.sh /data
 WORKDIR /data

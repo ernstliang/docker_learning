@@ -16,7 +16,7 @@ services:
   flask:
     container_name: myflask
     build: .
-    image: debian_py36:1.3
+    image: env_py36:1.1
     ports:
       - 8089:8089
     volumes:

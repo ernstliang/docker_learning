@@ -2,3 +2,5 @@ __pycache__
 docker_test-master/
 timatrix
 uwsgi.pid
+local_data/
+data.sqlite
