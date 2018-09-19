@@ -11,6 +11,9 @@ from flask_sqlalchemy import SQLAlchemy
 # migrate
 from flask_script import Shell
 from flask_migrate import Migrate, MigrateCommand
+# mail
+from flask_mail import Mail, Message
+from threading import Thread
 
 # 当前目录，可用于sqlite保存位置
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -22,6 +25,19 @@ app.config['SECRET_KEY'] = '070D6501-E6B4-4295-AC43-8B58E2C999B9'
 # sqlite存储配置
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# mail
+app.config['MAIL_DEBUG'] = True
+app.config['MAIL_SUPPRESS_SEND'] = False
+app.config['MAIL_SERVER'] = 'smtp.qq.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['FLASKY_ADMIN'] = os.environ.get('FLASKY_ADMIN')
+app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
+app.config['FLASKY_MAIL_SENDER'] = os.environ.get('MAIL_USERNAME')
 
 # bootstrap网页组件框架
 bootstrap = Bootstrap(app)
@@ -29,6 +45,8 @@ bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 # migrate
 migrate = Migrate(app, db)
+# mail
+mail = Mail(app)
 
 @app.shell_context_processor
 def make_shell_context():
@@ -38,6 +56,7 @@ def make_shell_context():
 class NameForm(Form):
     name = StringField('What is your name?', validators=[Required()])
     submit = SubmitField('Submit')
+    sendmail = SubmitField('SendMail')
 
 # sqlalchemy数据结构
 class Role(db.Model):
@@ -57,6 +76,19 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+def sync_send_mail(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+def send_email(to, subject, template, **kwargs):
+    msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + subject,
+                sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    thr = Thread(target=sync_send_mail, args=[app, msg])
+    thr.start()
+    return str
 
 # 404错误页
 @app.errorhandler(404)
@@ -81,6 +113,8 @@ def index():
             user = User(username=form.name.data)
             db.session.add(user)
             session['known'] = False
+            if app.config['FLASKY_ADMIN']:
+                send_email(app.config['FLASKY_ADMIN'], 'New User', 'mail/new_user', user=user)
         else:
             session['known'] = True
         form.name.data = ''

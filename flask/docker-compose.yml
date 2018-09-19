@@ -21,3 +21,9 @@ services:
       - 8089:8089
     volumes:
       - "$PWD:/data/"
+    # 环境变量
+    environment:
+      - MAIL_USERNAME=${ENV_MAIL_USERNAME}
+      - MAIL_PASSWORD=${ENV_MAIL_PASSWORD}
+      - FLASKY_ADMIN=${ENV_MAIL_ADMIN}
+      - SECRET_KEY=${ENV_SECRET_KEY}

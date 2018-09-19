@@ -1,4 +1,4 @@
 #!/bin/bash
 
 #cd ..
-uwsgi --ini /data/flask/uwsgi.ini
+uwsgi --ini /data/flasky/uwsgi.ini
