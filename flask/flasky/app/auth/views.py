@@ -31,6 +31,7 @@ def register():
         user = User(email=form.email.data,
                     username=form.username.data,
                     password=form.password.data)
+        print('user is: ', user)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
@@ -55,12 +56,13 @@ def confirm(token):
 # 前置判断用户是否确认
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed \
             and request.endpoint[:5] != 'auth.' \
             and request.endpoint != 'static':
-        print('endpoint is: %s' % request.endpoint)
-        return redirect(url_for('auth.unconfirmed'))
+            print('endpoint is: %s' % request.endpoint)
+            return redirect(url_for('auth.unconfirmed'))
 
 @auth.route('/unconfirmed')
 def unconfirmed():

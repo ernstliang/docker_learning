@@ -10,3 +10,18 @@
 - manage.py用于启动程序及其他任务
 
 
+## 数据库迁移
+- 创建数据迁移仓库
+```
+$ python manage.py db init
+创建migrations目录
+```
+- migrate子命令来自动创建迁移脚本
+```
+$ python manage.py db migrate -m "initial migration"
+```
+- 更新数据库
+```
+$ python manage.py db upgrade
+```
+

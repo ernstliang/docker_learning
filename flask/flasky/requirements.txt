@@ -16,3 +16,4 @@ selenium
 gunicorn
 werkzeug
 itsdangerous
+faker
