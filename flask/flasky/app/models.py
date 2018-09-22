@@ -20,9 +20,9 @@ class Follow(db.Model):
 class Permission:
     FOLLOW = 0x01   #关注用户
     COMMIT = 0x02   #发布评论
-    WRITE_ARTICLES = 0x04 #写原创文章
-    MODERATE_COMMENTS = 0x08 #查看他人评论
-    ADMINISTER = 0x80   #管理网站
+    WRITE = 0x04 #写原创文章
+    MODERATE = 0x08 #查看他人评论
+    ADMIN = 0x80   #管理网站
 
 # sqlalchemy数据结构
 class Role(db.Model):
@@ -40,8 +40,8 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {
-            'User': (Permission.FOLLOW | Permission.COMMIT | Permission.WRITE_ARTICLES, True),
-            'Moderator': (Permission.FOLLOW | Permission.COMMIT | Permission.WRITE_ARTICLES | Permission.MODERATE_COMMENTS, False),
+            'User': (Permission.FOLLOW | Permission.COMMIT | Permission.WRITE, True),
+            'Moderator': (Permission.FOLLOW | Permission.COMMIT | Permission.WRITE | Permission.MODERATE, False),
             'Administrator': (0xff, False)
         }
         for r in roles:
@@ -68,6 +68,9 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
+    # email hash 用于获取头像
+    avatar_hash = db.Column(db.String(32))
+
     # 文章
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
@@ -76,8 +79,9 @@ class User(UserMixin, db.Model):
     # 被关注
     followers = db.relationship('Follow', foreign_keys=[Follow.followed_id], backref=db.backref('followed', lazy='joined'), lazy='dynamic', cascade='all, delete-orphan')
 
-    # email hash 用于获取头像
-    avatar_hash = db.Column(db.String(32))
+    # 评论
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -159,7 +163,7 @@ class User(UserMixin, db.Model):
     
     #是否管理员
     def is_administrator(self):
-        return self.can(Permission.ADMINISTER)
+        return self.can(Permission.ADMIN)
 
     def ping(self):
         self.last_seen = datetime.utcnow()
@@ -216,12 +220,31 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     body_html = db.Column(db.Text)
 
+    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+
     def on_changed_body(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
         target.body_html = bleach.linkify(bleach.clean(markdown(value, output_format='html'), tags=allowed_tags, strip=True))
 
-db.event.listen(Post.body, 'set', Post.on_changed_body)
+#评论
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags =  ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(markdown(value, output_format='html'), tags=allowed_tags, strip=True))
+
+# 注册监听
+db.event.listen(Post.body, 'set', Post.on_changed_body)
+db.event.listen(Comment.body, 'set', Comment.on_changed_body)
 
 
 # 加载用户的回调函数
