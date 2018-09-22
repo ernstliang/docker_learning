@@ -25,3 +25,15 @@ $ python manage.py db migrate -m "initial migration"
 $ python manage.py db upgrade
 ```
 
+## css文件位置
+项目使用docker启动，分为nginx_flask + myflask，myflask返回的页面中使用了css，但页面调用的css是nginx的static目录下查找到，所以需要在nginx的配置中配置static目录下的css
+```
+nginx.conf中
+location /static {
+    alias /data/flasky/www/static;
+}
+docker-compose.yml指定磁盘映射
+volumes:
+    - "$PWD/flasky/nginx/conf.d:/etc/nginx/conf.d"
+    - "$PWD/flasky/www:/data/flasky/www"
+```

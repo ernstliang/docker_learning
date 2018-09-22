@@ -8,8 +8,8 @@ services:
       - 80:80
     # 磁盘映射
     volumes:
-      - "$PWD/flask/nginx/conf.d:/etc/nginx/conf.d"
-      - "$PWD/flask/www:/data/flask/www"
+      - "$PWD/flasky/nginx/conf.d:/etc/nginx/conf.d"
+      - "$PWD/flasky/www:/data/flasky/www"
     links:
       - flask:myflask
       

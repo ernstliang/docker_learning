@@ -2,6 +2,8 @@
 
 - **env_py36 1.0**:
 ```
+docker build -t env_py36:1.0 .
+
 基于python:3.6.6-slim-jessie
 安装gcc、g++编译环境
 
