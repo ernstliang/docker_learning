@@ -235,7 +235,7 @@ def moderate():
 
 def moderate_comment(id, disable):
     comment = Comment.query.get_or_404(id)
-    comment.disable = disable
+    comment.disabled = disable
     db.session.add(comment)
     db.session.commit()
     return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
