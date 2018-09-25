@@ -26,7 +26,7 @@ def index():
     else:
         query = Post.query
     page = request.args.get('page', 1, type=int)
-    pagination = query.order_by(Post.timestamp.desc()).paginate(page, per_page=current_app.config['FLASKY_POST_PER_PAGE'], error_out=False)
+    pagination = query.order_by(Post.timestamp.desc()).paginate(page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
     return render_template('index.html', form=form, posts=posts, pagination=pagination, show_followed=show_followed)
 
@@ -70,7 +70,7 @@ def for_moderators_only():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    pagination = user.posts.order_by(Post.timestamp.desc()).paginate(page, per_page=current_app.config['FLASKY_POST_PER_PAGE'], error_out=False)
+    pagination = user.posts.order_by(Post.timestamp.desc()).paginate(page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
     # posts = user.posts.order_by(Post.timestamp.desc()).all()
     return render_template('user.html', user=user, posts=posts, pagination=pagination)
