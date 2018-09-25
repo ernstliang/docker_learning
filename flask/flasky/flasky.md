@@ -37,3 +37,9 @@ volumes:
     - "$PWD/flasky/nginx/conf.d:/etc/nginx/conf.d"
     - "$PWD/flasky/www:/data/flasky/www"
 ```
+
+## 测试
+coverage测试指令
+```
+$ python manage.py test --coverage
+```

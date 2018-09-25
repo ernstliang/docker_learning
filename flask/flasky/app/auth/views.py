@@ -31,7 +31,7 @@ def register():
         user = User(email=form.email.data,
                     username=form.username.data,
                     password=form.password.data)
-        print('user is: ', user)
+        # print('user is: ', user)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
@@ -61,7 +61,7 @@ def before_request():
         if not current_user.confirmed \
             and request.endpoint[:5] != 'auth.' \
             and request.endpoint != 'static':
-            print('endpoint is: %s' % request.endpoint)
+            # print('endpoint is: %s' % request.endpoint)
             return redirect(url_for('auth.unconfirmed'))
 
 @auth.route('/unconfirmed')

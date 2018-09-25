@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import render_template, session, redirect, url_for, current_app, abort, flash, request, make_response
 from flask_login import login_required, current_user
+from flask_sqlalchemy import get_debug_queries
 
 from . import main
 from .forms import NameForm, EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
@@ -261,3 +262,10 @@ def moderate_disable(id):
     # db.session.add(comment)
     # db.session.commit()
     # return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
+
+@main.after_app_request
+def after_request(respones):
+    for query in get_debug_queries():
+        if query.duration >= 1:
+            print('Slow query: %s\nParameters %s\nDuration: %fs\nnContext: %s\n' % (query.statement, query.parameters, query.duration, query.context))
+    return respones

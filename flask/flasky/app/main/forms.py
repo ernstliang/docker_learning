@@ -1,23 +1,23 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField, ValidationError
 from wtforms.validators import Required, Length, Email, Regexp
 from ..models import Role, User
 from flask_pagedown.fields import PageDownField
 
 # 名字表单
-class NameForm(Form):
+class NameForm(FlaskForm):
     name = StringField('What is your name?', validators=[Required(), Length(1, 64)])
     submit = SubmitField('Submit')
 
 # 编辑用户信息的表单
-class EditProfileForm(Form):
+class EditProfileForm(FlaskForm):
     name = StringField('Real name', validators=[Required(), Length(1, 64)])
     location = StringField('Location', validators=[Length(0, 64)])
     about_me = TextAreaField('About me')
     submit = SubmitField('Submit')
 
 # 管理员使用的资料编辑表单
-class EditProfileAdminForm(Form):
+class EditProfileAdminForm(FlaskForm):
     email = StringField('Email', validators=[Required(), Length(1, 64), Email()])
     username = StringField('Username', validators=[
         Required(), Length(1, 64), 
@@ -42,10 +42,10 @@ class EditProfileAdminForm(Form):
         if field.data != self.user.username and User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in user.')
 
-class PostForm(Form):
+class PostForm(FlaskForm):
     body = PageDownField("Wat's on your mind?", validators=[Required()])
     submit = SubmitField('Submit')
 
-class CommentForm(Form):
+class CommentForm(FlaskForm):
     body = StringField('Enter your comment', validators=[Required()])
     submit = SubmitField('Submit')
