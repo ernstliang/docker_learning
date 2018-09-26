@@ -26,8 +26,12 @@ class DevelopmentConfig(Config):
     MAIL_USE_TLS = False
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    SQLALCHEMY_DATABASE_URI\
+        = os.environ.get('DEV_DATABASE_URL') or \
+          'mysql+mysqlconnector://root:123456@172.10.0.10:3306/myflasky?charset=utf8'
+        # 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    # mysql url
+    # 'mysql+mysqlconnector://root:123456@172.17.0.3:3306'
 
 class TestingConfig(Config):
     WTF_CSRF_ENABLED = False

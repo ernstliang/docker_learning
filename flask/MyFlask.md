@@ -22,3 +22,26 @@ $ python manage.py shell
 >>> data = s.loads(token)
 >>> data
 ```
+
+## 接入mysql
+将myflasky中的数据库从sqlite替换成docker mysql:5.6
+### 修改docker-compose.yml
+- 新建networks:`flask_net`，子网络:`172.10.0.0/16`
+- services下新建mysql，设置mysql固定网络ip:`172.10.0.10`
+- 将nginx、flask和mysql都设置到`flask_net`网络下
+- 修改flasky配置的db路径，`mysql+mysqlconnector://root:123456@172.10.0.10:3306/myflasky`
+
+### 修改mysql docker支持utf8
+- 改flasky配置mysql地址:`mysql+mysqlconnector://root:123456@172.10.0.10:3306/myflasky?charset=utf8`, 增加`charset=utf8`设置
+- 修改mysqld.cnf配置文件，增加以下参数配置
+```
+[mysqld]
+character_set_server = utf8mb4
+collation-server=utf8mb4_general_ci
+
+[mysql]
+default_character_set = utf8mb4
+
+[client]
+default_character_set = utf8mb4
+```
