@@ -1,4 +1,4 @@
-# my flask demo
+# My flasky
 learning flask
 
 
@@ -44,4 +44,9 @@ default_character_set = utf8mb4
 
 [client]
 default_character_set = utf8mb4
+```
+- 查看数据库编码设置
+```
+SHOW VARIABLES LIKE 'character_set_%';
+SHOW VARIABLES LIKE 'collation_%';
 ```
