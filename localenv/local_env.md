@@ -107,3 +107,11 @@ mysql> show variables like "sql_mode";
 ```
 
 去掉NO_ZERO_IN_DATE和NO_ZERO_DATE可以修复timestamp设置为0000-00-00 00:00:00报错的问题
+
+## 启动trace
+
+jaegertracing/all-in-one数据都存储在内存中所以只能作为测试/联调使用，生产环境不能使用
+
+```
+docker run -d --name jaeger   -e COLLECTOR_ZIPKIN_HTTP_PORT=9411   -p 5775:5775/udp   -p 6831:6831/udp   -p 6832:6832/udp   -p 5778:5778   -p 16686:16686   -p 14268:14268   -p 9411:9411   --cpus=1   --memory=512M   jaegertracing/all-in-one:1.9
+```

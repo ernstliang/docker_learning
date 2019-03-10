@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
   mysql:
     image: mysql:5.7
@@ -21,7 +21,6 @@ services:
       - "6379:6379"
   rabbitmq:
     image: rabbitmq:management-alpine
-    container_name: rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${ENV_RABBITMQ_NAME}
       - RABBITMQ_DEFAULT_PASS=${ENV_RABBITMQ_PASSWORD}
@@ -34,11 +33,32 @@ services:
       options:
         max-size: "200k"
         max-file: "10"
+  # jaeger改用单独docker-compse
   # trace:
-  #   image: jaegertracing/jaeger-agent:1.9
+  #   image: jaegertracing/all-in-one:1.9
   #   restart: always
+  #   environment:
+  #     - COLLECTOR_ZIPKIN_HTTP_PORT=9411
   #   ports:
-  #     - "5775:5775"
-  #     - "6831:6831"
-  #     - "6832:6832"
+  #     - "5775:5775/udp"
+  #     - "6831:6831/udp"
+  #     - "6832:6832/udp"
   #     - "5778:5778"
+  #     - "16686:16686"
+  #     - "14268:14268"
+  #     - "9411:9411"
+  #   # docker-compose non swarm mode resource限制需要version 2
+  #   # 参见https://docs.docker.com/compose/compose-file/compose-file-v2/#cpu-and-other-resources
+  #   # cpu_count: 1
+  #   # cpus: '0.50'
+  #   mem_limit: 512m
+  #   # docker-compose swarm mode resource使用version 3
+  #   # 参见https://docs.docker.com/compose/compose-file/#resources
+  #   # deploy:
+  #   #   resources:
+  #   #     limits:
+  #   #       cpus: '0.50'
+  #   #       memory: 512M
+  #   #     reservations:
+  #   #       cpus: '0.25'
+  #   #       memory: 100M
