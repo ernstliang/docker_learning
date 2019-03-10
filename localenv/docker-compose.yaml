@@ -8,23 +8,23 @@ services:
     # 环境变量
     environment:
       # mysql密码
-      - MYSQL_ROOT_PASSWORD=molotest123
+      - MYSQL_ROOT_PASSWORD=${ENV_MYSQL_PASSWORD}
     # 数据库数据持久化
     volumes:
-      - "/Users/xliang/Documents/workspace/mysql/data:/var/lib/mysql"
-      - "/Users/xliang/Documents/workspace/mysql/conf:/etc/mysql/mysql.conf.d"
-      - "/Users/xliang/Documents/workspace/mysql/logs:/logs"
+      - "${ENV_MYSQL_VOLUME}:/var/lib/mysql"
+      - "${PWD}/mysql.conf.d:/etc/mysql/mysql.conf.d/"
   redis:
     image: "redis:alpine"
     restart: always
+    command: redis-server --requirepass ${ENV_REDIS_PASSWORD}
     ports:
       - "6379:6379"
   rabbitmq:
     image: rabbitmq:management-alpine
     container_name: rabbitmq
     environment:
-      - RABBITMQ_DEFAULT_USER=test
-      - RABBITMQ_DEFAULT_PASS=test
+      - RABBITMQ_DEFAULT_USER=${ENV_RABBITMQ_NAME}
+      - RABBITMQ_DEFAULT_PASS=${ENV_RABBITMQ_PASSWORD}
     restart: always
     ports:
       - "15672:15672"
@@ -34,11 +34,11 @@ services:
       options:
         max-size: "200k"
         max-file: "10"
-  trace:
-    image: jaegertracing/jaeger-agent:1.9
-    restart: always
-    ports:
-      - "5775:5775"
-      - "6831:6831"
-      - "6832:6832"
-      - "5778:5778"
+  # trace:
+  #   image: jaegertracing/jaeger-agent:1.9
+  #   restart: always
+  #   ports:
+  #     - "5775:5775"
+  #     - "6831:6831"
+  #     - "6832:6832"
+  #     - "5778:5778"

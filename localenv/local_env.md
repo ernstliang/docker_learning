@@ -2,6 +2,17 @@
 包括mysql、redis、rabbit、trace<br>
 通过docker-compose启动
 
+## 使用env定义环境变量供docker-compose使用
+创建文件`.env`
+
+```
+ENV_MYSQL_PASSWORD=xxxx
+ENV_MYSQL_VOLUME=xxxx
+ENV_REDIS_PASSWORD=xxxx
+ENV_RABBITMQ_NAME=xxx
+ENV_RABBITMQ_PASSWORD=xxx
+```
+
 ## mysql
 选择mysql5.7镜像，映射本地volume<br>
 docker-compose配置设置默认密码
@@ -10,7 +21,7 @@ docker-compose配置设置默认密码
 # 环境变量
     environment:
       # mysql密码
-      - MYSQL_ROOT_PASSWORD=molotest123
+      - MYSQL_ROOT_PASSWORD=${ENV_MYSQL_PASSWORD}
 ```
 
 登陆docker镜像中的mysql
@@ -44,6 +55,8 @@ mysql> show grants;
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'yourpassword' WITH GRANT OPTION;
 ```
 
+`注`:yourpassword需要修改成数据库的密码
+
 刷新
 
 ```
@@ -51,7 +64,37 @@ mysql> FLUSH  PRIVILEGES;
 ```
 
 
-设置mysql5.7及以上版本time等于0报错问题
+### mysql读取配置文件的顺序
+
+```
+$ mysqld --help --verbose | grep -A1 -B1 cnf
+Default options are read from the following files in the given order:
+/etc/my.cnf /etc/mysql/my.cnf ~/.my.cnf
+The following groups are read: mysqld server mysqld-5.7
+--
+  -P, --port=#        Port number to use for connection or 0 to default to,
+                      my.cnf, $MYSQL_TCP_PORT, /etc/services, built-in default
+                      (3306), whatever comes first
+```
+
+### 配置本地mysqld.cnf配置文件
+通过docker的volume将本地的mysqld.cnf配置文件导入到mysql容器中，具体参考docker-compose.yaml文件<br>
+用于修复mysql5.7后版本timestamp设置空是报错的问题
+
+```
+volumes:
+      - "${ENV_MYSQL_VOLUME}:/var/lib/mysql"
+      - "${PWD}/mysql.conf.d:/etc/mysql/mysql.conf.d/"
+```
+
+#### 修改mysql配置
+设置mysql5.7及以上版本开启了strict模式(严格模式)，timestamp设置为0000-00-00 00:00:00会报错
+
+```
+Syntax error or access violation: 1067 Invalid default value for 'xxx'
+```
+
+查看sql mode的设置
 
 ```
 mysql> show variables like "sql_mode";
@@ -62,3 +105,5 @@ mysql> show variables like "sql_mode";
 +---------------+-------------------------------------------------------------------------------------------------------------------------------------------+
 1 row in set (0.01 sec)
 ```
+
+去掉NO_ZERO_IN_DATE和NO_ZERO_DATE可以修复timestamp设置为0000-00-00 00:00:00报错的问题
