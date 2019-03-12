@@ -3,12 +3,14 @@ version: '3'
 services:
   master:
     image: chrislusf/seaweedfs # use a remote image
+    restart: always
     ports:
     - 9333:9333
     - 19333:19333
     command: "master"
   volume:
     image: chrislusf/seaweedfs # use a remote image
+    restart: always
     ports:
     # - 8080:8080
     - 18080:18080
@@ -19,6 +21,7 @@ services:
     - master
   filer:
     image: chrislusf/seaweedfs # use a remote image
+    restart: always
     ports:
     - 8888:8888
     - 18888:18888
@@ -32,6 +35,7 @@ services:
     - volume
   s3:
     image: chrislusf/seaweedfs # use a remote image
+    restart: always
     ports:
     - 8333:8333
     command: 's3 -filer="filer:8888"'
