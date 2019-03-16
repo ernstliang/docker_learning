@@ -6,5 +6,5 @@
     "node_name": "agent2",
     "server": false,
     "rejoin_after_leave": true,
-    "retry_join": ["172.17.0.100", "172.17.0.101", "172.17.0.102"]
+    "retry_join": ["10.11.1.10", "10.11.1.11", "10.11.1.12"]
     }

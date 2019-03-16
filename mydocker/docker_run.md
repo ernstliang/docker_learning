@@ -4,7 +4,7 @@
 
 ## 启动redis
 ```
-docker run -idt --name redis_1 -p 6379:6379
+docker run -idt --name redis_1 -p 6379:6379 redis
 ```
 
 ## 启动mysql

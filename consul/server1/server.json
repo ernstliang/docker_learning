@@ -4,7 +4,8 @@
     "log_level": "INFO",
     "node_name": "server1",
     "server": true,
-    "bind_addr": "10.11.1.10",
+    "client_addr":"0.0.0.0",
     "bootstrap": true,
-    "retry_join": ["10.11.1.10", "10.11.1.11", "10.11.1.12"]
+    "retry_join": ["10.11.1.10", "10.11.1.11", "10.11.1.12"],
+    "ui":true
 }

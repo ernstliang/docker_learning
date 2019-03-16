@@ -4,16 +4,16 @@ services:
     image: centos_consul
     container_name: consul_server_1
     ports:
-      - 8300:8300
-      - 8301:8301
-      - 8301:8301/udp
-      - 8302:8302
-      - 8302:8302/udp
-      - 8400:8400
-      - 8500:8500
+      - 18300:8300
+      - 18301:8301
+      - 18301:8301/udp
+      - 18302:8302
+      - 18302:8302/udp
+      - 18400:8400
+      - 18500:8500
     volumes:
       - $PWD:/data/
-    command: consul agent -config-file=./server1/server.json
+    command: consul agent -config-file=./server1/server.json -advertise-wan="10.97.61.29:18302"
     networks:
       consul_net:
         ipv4_address: 10.11.1.10
@@ -22,7 +22,7 @@ services:
     container_name: consul_server_2
     volumes:
       - $PWD:/data/
-    command: consul agent -config-file=./server2/server.json
+    command: consul agent -config-file=./server2/server.json -advertise-wan="10.97.61.29:18302"
     networks:
       consul_net:
         ipv4_address: 10.11.1.11
@@ -31,7 +31,7 @@ services:
     container_name: consul_server_3
     volumes:
       - $PWD:/data/
-    command: consul agent -config-file=./server3/server.json
+    command: consul agent -config-file=./server3/server.json -advertise-wan="10.97.61.29:18302"
     networks:
       consul_net:
         ipv4_address: 10.11.1.12
