@@ -4,3 +4,7 @@ timatrix
 uwsgi.pid
 local_data/
 data.sqlite
+consul/agent1
+consul/server1
+consul/server2
+consul/server3
