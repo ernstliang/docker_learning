@@ -8,3 +8,5 @@ consul/agent1
 consul/server1
 consul/server2
 consul/server3
+mysql/master/data
+mysql/slave/data
