@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  master1:
+    image: cloudindustry/seaweedfs:1.28
+    ports:
+      - 9333:9333
+      - 19333:19333
+    command: 'master -port=9333 -ip=master1 -ip.bind=master1 -peers=172.26.0.11:9333,172.26.0.12:9333,172.26.0.13:9333'
+    networks:
+      weednet:
+        ipv4_address: 172.26.0.11
+  master2:
+    image: cloudindustry/seaweedfs:1.28
+    ports:
+      - 9334:9333
+      - 19334:19333
+    command: 'master -port=9333 -ip=master2 -ip.bind=master2 -peers=172.26.0.11:9333,172.26.0.12:9333,172.26.0.13:9333'
+    depends_on:
+      - master1
+    networks:
+      weednet:
+        ipv4_address: 172.26.0.12
+  master3:
+    image: cloudindustry/seaweedfs:1.28
+    ports:
+      - 9335:9333
+      - 19335:19333
+    command: 'master -port=9333 -ip=master3 -ip.bind=master3 -peers=172.26.0.11:9333,172.26.0.12:9333,172.26.0.13:9333'
+    depends_on:
+      - master2
+    networks:
+      weednet:
+        ipv4_address: 172.26.0.13
+  volume1:
+    image: cloudindustry/seaweedfs:1.28
+    ports:
+      - 8080:8080
+      - 18080:18080
+    command: 'volume -max=5 -port=8080 -ip.bind=volume1 -mserver=master1:9333'
+    depends_on:
+      - master1
+      - master2
+      - master3
+    links:
+      - master1
+      - master2
+      - master3
+    networks:
+      weednet:
+        ipv4_address: 172.26.0.20
+networks:
+  weednet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.26.0.0/16
