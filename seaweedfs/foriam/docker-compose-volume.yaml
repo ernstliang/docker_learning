@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  volume:
+    image: cloudindustry/seaweedfs:1.28
+    restart: always
+    network_mode: host
+    command: 'volume -max=5 -port=${VPORT} -ip=${NODE} -ip.bind=${INNER} -mserver=${INNER}:${MPORT} -rack=rc2'
+    volumes:
+      - "${VDIR}:/data"
+    environment:
+      - SEAWEEDFS_VOLUME_IP=212.64.78.186

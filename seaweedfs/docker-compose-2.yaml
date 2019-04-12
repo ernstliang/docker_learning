@@ -37,7 +37,7 @@ services:
     ports:
       - 8080:8080
       - 18080:18080
-    command: 'volume -max=5 -port=8080 -ip.bind=volume1 -mserver=master1:9333'
+    command: 'volume -max=5 -port=8080 -ip=172.26.0.20 -ip.bind=172.26.0.20 -mserver=172.26.0.11:9333'
     depends_on:
       - master1
       - master2

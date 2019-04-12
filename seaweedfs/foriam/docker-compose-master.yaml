@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  master:
+    image: cloudindustry/seaweedfs:1.28
+    restart: always
+    network_mode: host
+    command: '-v=3 master -port=${MPORT} -ip=${NODE} -ip.bind=${INNER} -mdir=/data/master -peers=${NODE1}:${MPORT},${NODE2}:${MPORT},${NODE3}:${MPORT} -defaultReplication=010'
+    volumes:
+      - "${MDIR}:/data/master"
+  volume:
+    image: cloudindustry/seaweedfs:1.28
+    restart: always
+    network_mode: host
+    command: 'volume -max=5 -port=${VPORT} -ip=${NODE} -ip.bind=${INNER} -mserver=${INNER}:${MPORT} -rack=rc2'
+    volumes:
+      - "${VDIR}:/data"
+    depends_on:
+      - master
