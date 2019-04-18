@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  mysql_master:
+  master:
     image: mysql:5.7
     ports:
       - "3306:3306"
@@ -11,10 +11,11 @@ services:
     volumes:
       - "$PWD/master/data:/var/lib/mysql"
       - "${PWD}/master/mysql.conf.d:/etc/mysql/mysql.conf.d/"
+      - "${PWD}:/data/"
     networks:
       mysql_net:
         ipv4_address: 172.21.0.10
-  mysql_slave:
+  slave:
     image: mysql:5.7
     ports:
       - "3307:3306"

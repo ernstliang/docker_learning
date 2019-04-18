@@ -6,11 +6,11 @@
 ### 2.创建用户
 
 ```
-create user 'repl'@'172.21.0.%' identified by '12345678';
+CREATE USER 'repl'@'172.17.0.%' IDENTIFIED BY 'E7EJ@#duys';
 ```
 
 ```
-grant replication slave on *.* to 'repl'@'172.21.0.%' identified by '12345678';
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'172.17.0.%' IDENTIFIED BY 'E7EJ@#duys';
 ```
 
 ### 3.获取二级制日志的信息
@@ -49,7 +49,7 @@ server-id=2
 ### 2.配置同步参数
 
 ```
-mysql> change master to master_host='172.21.0.10',master_user='repl',master_password='12345678',master_log_file='mysql-bin.000002',master_log_pos=154;
+mysql> change master to master_host='172.17.0.14',master_port=3306,master_user='repl',master_password='E7EJ@#duys',master_log_file='mysql-bin.000006',master_log_pos=154;
 ```
 
 启动主从同步进程
@@ -68,4 +68,35 @@ mysql > show slave status \G
 ```
 Slave_IO_Running: Yes
 Slave_SQL_Running: Yes
+```
+
+## 创建数据库账号
+
+### 创建iam账号
+
+```
+mysql> GRANT ALL PRIVILEGES ON `iam_%`.* TO 'iam'@'%' identified by 'Mac@87uip#$';
+```
+
+错误: 密码不符合当前设置的密码规则
+```
+ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
+```
+
+### 导出iam相关数据库
+
+```
+$ mysqldump -u iam -p --default-character-set=utf8 --all-databases > iam.sql
+```
+
+### 创建asm账号
+
+```
+mysql> GRANT ALL PRIVILEGES ON `asm_%`.* TO 'asm'@'%' identified by 'Cl0udP@ss0rd';
+```
+
+### 导出asm相关数据库
+
+```
+$ mysqldump -P3306 -uasm -p --default-character-set=utf8 --all-databases > asm.sql
 ```

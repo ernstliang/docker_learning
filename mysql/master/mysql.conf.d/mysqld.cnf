@@ -31,5 +31,30 @@ symbolic-links=0
 # Disabling NO_ZERO_IN_DATE,NO_ZERO_DATE,
 sql_mode=ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 
+#数据库默认字符集,主流字符集支持一些特殊表情符号（特殊表情符占用4个字节）
+character-set-server = utf8
+
+#数据库字符集对应一些排序等规则，注意要和character-set-server对应
+collation-server = utf8_general_ci
+
+# 是否对sql语句大小写敏感，默认值为0，1表示不敏感
+lower_case_table_names = 1
+
+# 数据库连接相关设置
+# 最大连接数，可设最大值16384，一般考虑根据同时在线人数设置一个比较综合的数字，鉴于该数值增大并不太消耗系统资源，建议直接设10000
+# 如果在访问时经常出现Too Many Connections的错误提示，则需要增大该参数值
+max_connections = 10000
+
+# 默认值100，最大错误连接数，如果有超出该参数值个数的中断错误连接，则该主机将被禁止连接。如需对该主机进行解禁，执行：FLUSH HOST
+# 考虑高并发场景下的容错，建议加大。
+max_connect_errors = 10000
+
+# 指定索引缓冲区的大小, 为MYISAM数据表开启供线程共享的索引缓存,对INNODB引擎无效。相当影响MyISAM的性能。
+# 不要将其设置大于你可用内存的30%,因为一部分内存同样被OS用来缓冲行数据
+# 甚至在你并不使用MyISAM 表的情况下, 你也需要仍旧设置起 8-64M 内存由于它同样会被内部临时磁盘表使用.
+# 默认值 8M，建议值：对于内存在4GB左右的服务器该参数可设置为256M或384M。注意：该参数值设置的过大反而会是服务器整体效率降低！
+key_buffer_size = 64M
+
+# 主从相关设置
 log-bin=mysql-bin
 server-id=1
