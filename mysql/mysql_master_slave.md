@@ -3,23 +3,24 @@
 ## 配置主服务器
 ### 1.修改配置文件
 
-### 2.创建用户
+### 2.创建主从同步用的账户
 
 ```
-CREATE USER 'repl'@'172.17.0.%' IDENTIFIED BY 'E7EJ@#duys';
-```
+mysql> GRANT REPLICATION SLAVE ON *.* TO 'repl'@'172.17.0.%' IDENTIFIED BY 'E7EJ@#duys';
 
-```
-GRANT REPLICATION SLAVE ON *.* TO 'repl'@'172.17.0.%' IDENTIFIED BY 'E7EJ@#duys';
+用户名: repl
+Host: 内网ip段
+密码: 符合密码规则的任意密码
 ```
 
 ### 3.获取二级制日志的信息
 
-
+给所有的表加读锁
 ```
 mysql> flush tables with read lock;
 ```
 
+查看master服务器的
 ```
 mysql> show master status;
 +------------------+----------+--------------+------------------+-------------------+
@@ -75,10 +76,10 @@ Slave_SQL_Running: Yes
 ### 创建iam账号
 
 ```
-mysql> GRANT ALL PRIVILEGES ON `iam_%`.* TO 'iam'@'%' identified by 'Mac@87uip#$';
+mysql> GRANT ALL PRIVILEGES ON `iam_%`.* TO 'iam'@'%' identified by '12345678';
 ```
 
-错误: 密码不符合当前设置的密码规则
+错误: 密码不符合当前设置的密码规则，设置复杂度更高的密码
 ```
 ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
 ```
@@ -92,7 +93,7 @@ $ mysqldump -u iam -p --default-character-set=utf8 --all-databases > iam.sql
 ### 创建asm账号
 
 ```
-mysql> GRANT ALL PRIVILEGES ON `asm_%`.* TO 'asm'@'%' identified by 'Cl0udP@ss0rd';
+mysql> GRANT ALL PRIVILEGES ON `asm_%`.* TO 'asm'@'%' identified by 'xxxxxxx';
 ```
 
 ### 导出asm相关数据库
